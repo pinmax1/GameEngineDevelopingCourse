@@ -250,12 +250,13 @@ namespace GameEngine
 
 		void D3D12RHIPrivate::Update(Mesh::Ptr mesh, Material::Ptr material)
 		{
+			timer += 0.01f;
 			D3D12Mesh d3d12Mesh = *reinterpret_cast<D3D12Mesh*>(mesh.get());
 			D3D12Material d3d12Material = *reinterpret_cast<D3D12Material*>(material.get());
 
 			float mTheta = 1.5f * DirectX::XM_PI;
 			float mPhi = DirectX::XM_PIDIV4;
-			float mRadius = 5.0f;
+			float mRadius = 10.0f;
 
 			// Convert Spherical to Cartesian coordinates.
 			float x = mRadius * sinf(mPhi) * cosf(mTheta);
@@ -272,6 +273,15 @@ namespace GameEngine
 			Math::Matrix4x4f proj = Core::Math::ProjectionMatrixLH(0.25f * DirectX::XM_PI, Core::MainWindowsApplication->GetAspectRatio(), 1.0f, 1000.0f);
 
 			Math::Matrix4x4f world = Math::Matrix4x4f::Identity();
+			Math::Matrix4x4f xAxis = Math::Matrix4x4f::Identity();
+			xAxis.SetElement(cosf(timer), 1, 1);
+			xAxis.SetElement(cosf(timer), 2, 2);
+			xAxis.SetElement(sinf(timer), 1, 2);
+			xAxis.SetElement(-sinf(timer), 2, 1);
+			Math::Matrix4x4f translate = Math::Matrix4x4f::Identity();
+			translate.SetElement(-2.0f, 3, 1);
+			translate.SetElement(-2.0f, 3, 2);
+			world = translate * xAxis;
 			Math::Matrix4x4f worldViewProj = world * view * proj;
 
 			ObjectConstants objConstants;

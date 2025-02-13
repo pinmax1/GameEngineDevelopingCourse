@@ -48,6 +48,8 @@ namespace GameEngine
 			void OnResize();
 
 		private:
+			float timer = 0.0f;
+
 			Microsoft::WRL::ComPtr<IDXGIFactory4> m_Factory;
 			Microsoft::WRL::ComPtr<ID3D12Device> m_Device;
 			Microsoft::WRL::ComPtr<ID3D12Fence> m_Fence;

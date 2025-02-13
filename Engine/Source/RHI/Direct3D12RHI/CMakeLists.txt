@@ -52,4 +52,5 @@ target_precompile_headers(Direct3D12RHI
 		<cassert>
 		<format>
 		<functional>
+		<chrono>
 )
