@@ -279,9 +279,9 @@ namespace GameEngine
 			xAxis.SetElement(sinf(timer), 1, 2);
 			xAxis.SetElement(-sinf(timer), 2, 1);
 			Math::Matrix4x4f translate = Math::Matrix4x4f::Identity();
-			translate.SetElement(-2.0f, 3, 1);
-			translate.SetElement(-2.0f, 3, 2);
-			world = translate * xAxis;
+			translate.SetElement(2.0f * sinf(timer), 3, 1);
+			translate.SetElement(2.0f * cosf(timer), 3, 2);
+			world = xAxis * translate;
 			Math::Matrix4x4f worldViewProj = world * view * proj;
 
 			ObjectConstants objConstants;
