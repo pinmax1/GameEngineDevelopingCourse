@@ -1,7 +1,14 @@
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+// Windows Header Files
+#include <windows.h>
+#include <WindowsX.h>
+#include <wrl.h>
+
 #include <Camera.h>
 #include <DefaultGeometry.h>
 #include <Game.h>
 #include <GameObject.h>
+#include <INIReader.h>
 
 namespace GameEngine
 {
@@ -23,6 +30,10 @@ namespace GameEngine
 			Render::RenderObject** renderObject = m_Objects.back()->GetRenderObjectRef();
 			m_renderThread->EnqueueCommand(Render::ERC::CreateRenderObject, RenderCore::DefaultGeometry::Cube(), renderObject);
 		}
+		INIReader reader("../../../../../Controls.ini");
+		UpButton = reader.Get("Controls", "Up", "UNKNOWN")[0];
+		DownButton = reader.Get("Controls", "Down", "UNKNOWN")[0];
+		
 	}
 
 	void Game::Run()
@@ -51,20 +62,26 @@ namespace GameEngine
 		for (int i = 0; i < m_Objects.size(); ++i)
 		{
 			Math::Vector3f pos = m_Objects[i]->GetPosition();
-
-			// Showcase
+			float direction = 0;
+			if (GetAsyncKeyState(DownButton))
+			{
+				direction = 1.0f;
+			}
+			else if (GetAsyncKeyState(UpButton)) {
+				direction = -1.0f;
+			}
 			if (i == 0)
 			{
-				pos.x += 0.5f * dt;
+				pos.x += 0.5f * dt * direction;
 			}
 			else if (i == 1)
 			{
-				pos.y -= 0.5f * dt;
+				pos.y -= 0.5f * dt * direction;
 			}
 			else if (i == 2)
 			{
-				pos.x += 0.5f * dt;
-				pos.y -= 0.5f * dt;
+				pos.x += 0.5f * dt * direction;
+				pos.y -= 0.5f * dt * direction;
 			}
 			m_Objects[i]->SetPosition(pos, m_renderThread->GetMainFrame());
 		}

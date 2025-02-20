@@ -22,7 +22,7 @@ namespace GameEngine::Core
     void OnMouseMove(WPARAM btnState, int x, int y, Camera* camera, Window* window)
     {
         Math::Vector2i mousePos = window->GetMousePos();
-        if ((btnState & MK_LBUTTON) != 0)
+        if ((btnState & VK_LBUTTON) != 0)
         {
             float dx = 0.25 * static_cast<float>(x - mousePos.x) * Math::Constants::PI / 180.f;
             float dy = 0.25 * static_cast<float>(y - mousePos.y) * Math::Constants::PI / 180.f;
@@ -31,7 +31,7 @@ namespace GameEngine::Core
 
             camera->Rotate(dx, dy);
         }
-        else if ((btnState & MK_RBUTTON) != 0)
+        else if ((btnState & VK_RBUTTON) != 0)
         {
             float dx = 0.05f * static_cast<float>(x - mousePos.x);
             float dy = 0.05f * static_cast<float>(y - mousePos.y);
