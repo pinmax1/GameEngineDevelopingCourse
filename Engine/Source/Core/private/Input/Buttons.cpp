@@ -8,6 +8,7 @@ namespace GameEngine::Core
 		{"right", KeyboardButton::RIGHT},
 		{"up", KeyboardButton::UP},
 		{"down", KeyboardButton::DOWN},
+		{"space", KeyboardButton::SPACE},
 		{"a", KeyboardButton::A},
 		{"w", KeyboardButton::W},
 		{"s", KeyboardButton::S},

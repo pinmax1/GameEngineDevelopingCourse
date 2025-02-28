@@ -16,13 +16,33 @@ namespace GameEngine
 		Core::g_MainCamera->SetViewDir(Math::Vector3f(0.0f, -6.0f, 6.0f).Normalized());
 
 		m_renderThread = std::make_unique<Render::RenderThread>();
-
+		m_platform = new GameObject(Math::Vector3f(0,-2.0f,0));
+		Render::RenderObject** renderObject = m_platform->GetRenderObjectRef();
+		m_renderThread->EnqueueCommand(Render::ERC::CreateRenderObject, RenderCore::DefaultGeometry::Platform(30.0f, 1.0f, 30.0f), renderObject);
+		srand(time(0));
 		// How many objects do we want to create
-		for (int i = 0; i < 3; ++i)
+		float x = -20.0f;
+		float z = -20.0f;
+		for (int i = 0; i < 100; ++i)
 		{
-			m_Objects.push_back(new GameObject());
-			Render::RenderObject** renderObject = m_Objects.back()->GetRenderObjectRef();
+
+			int type = rand() % 3;
+			if (type == 0) {
+				m_Objects.push_back(new MovingGameObject(Math::Vector3f(x, 0, z)));
+			}
+			else if (type == 1) {
+				m_Objects.push_back(new JumpingGameObject(Math::Vector3f(x, 0, z)));
+			}
+			else if (type == 2) {
+				m_Objects.push_back(new SelfMovingGameObject(Math::Vector3f(x, 0, z)));
+			}
+			renderObject = m_Objects.back()->GetRenderObjectRef();
 			m_renderThread->EnqueueCommand(Render::ERC::CreateRenderObject, RenderCore::DefaultGeometry::Cube(), renderObject);
+			x += 4.0f;
+			if (x > 16.0f) {
+				x = -20.0f;
+				z += 4.0f;
+			}
 		}
 
 		Core::g_InputHandler->RegisterCallback("GoForward", [&]() { Core::g_MainCamera->Move(Core::g_MainCamera->GetViewDir()); });
@@ -60,23 +80,10 @@ namespace GameEngine
 	{
 		for (int i = 0; i < m_Objects.size(); ++i)
 		{
-			Math::Vector3f pos = m_Objects[i]->GetPosition();
-
-			// Showcase
-			if (i == 0)
-			{
-				pos.x += 0.5f * dt;
-			}
-			else if (i == 1)
-			{
-				pos.y -= 0.5f * dt;
-			}
-			else if (i == 2)
-			{
-				pos.x += 0.5f * dt;
-				pos.y -= 0.5f * dt;
-			}
-			m_Objects[i]->SetPosition(pos, m_renderThread->GetMainFrame());
+			m_Objects[i]->Update(dt);
+			m_Objects[i]->SetPosition(m_Objects[i]->GetPosition(), m_renderThread->GetMainFrame());
+			m_platform->Update(dt);
+			m_platform->SetPosition(m_platform->GetPosition(), m_renderThread->GetMainFrame());
 		}
 	}
 }

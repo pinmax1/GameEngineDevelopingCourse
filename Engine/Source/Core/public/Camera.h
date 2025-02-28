@@ -30,7 +30,7 @@ namespace GameEngine
 			Math::Vector3f m_ViewDir;
 
 			// There are temp
-			float m_MovementSpeed = 10.f;
+			float m_MovementSpeed = 10.0f;
 			Math::Vector3f m_CurrentMoveDir = Math::Vector3f::Zero();
 		};
 

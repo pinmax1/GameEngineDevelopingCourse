@@ -18,6 +18,8 @@ namespace GameEngine
 				return KeyboardButton::UP;
 			case VK_DOWN:
 				return KeyboardButton::DOWN;
+			case VK_SPACE:
+				return KeyboardButton::SPACE;
 			case 'A':
 				return KeyboardButton::A;
 			case 'S':
