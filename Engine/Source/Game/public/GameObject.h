@@ -105,12 +105,12 @@ namespace GameEngine
 
 		SelfMovingGameObject(Math::Vector3f pos) {
 			m_Position = pos;
-			m_beginPosition = m_Position;
+			m_beginPosition = pos;
 		}
 
 		void Update(float dt) override {
-			m_Position = m_Position + Math::Vector3f(0, 0, 1.0f) * dir * speed * dt;
-			if (abs(m_Position.z - m_beginPosition.z) > 1.0f) {
+			m_Position.z = m_Position.z + dir * speed * dt;
+			if (abs(m_Position.z - m_beginPosition.z) > 3.0f) {
 				dir *= -1.0f;
 			}
 		}
