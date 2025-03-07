@@ -5,6 +5,7 @@
 #include <Geometry.h>
 #include <RenderThread.h>
 #include <RenderObject.h>
+#include <ecsAmmo.h>
 
 using namespace GameEngine;
 
@@ -14,7 +15,7 @@ void RegisterEcsMeshSystems(flecs::world& world)
 
 	world.system<const GeometryPtr, RenderObjectPtr>()
 		.each([&](flecs::entity e, const GeometryPtr& geometry, RenderObjectPtr& renderObject)
-	{
+	{		
 		renderThread->ptr->EnqueueCommand(Render::ERC::CreateRenderObject, geometry.ptr, renderObject.ptr);
 		e.remove<GeometryPtr>();
 	});

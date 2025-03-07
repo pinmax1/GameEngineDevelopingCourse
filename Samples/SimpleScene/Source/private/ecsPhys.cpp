@@ -1,5 +1,6 @@
 #include <ecsPhys.h>
 #include <flecs.h>
+#include <ecsAmmo.h>
 
 namespace
 {
@@ -19,6 +20,9 @@ void RegisterEcsPhysSystems(flecs::world& world)
 			constexpr float planeEpsilon = 0.1f;
 			if (plane->value.x * pos->value.x + plane->value.y * pos->value.y + plane->value.z * pos->value.z < plane->value.w + planeEpsilon)
 			{
+				if (!e.has<BulletLifetime>()) {
+					e.set<BulletLifetime>(BulletLifetime({ 5.0f }));
+				}
 				return;
 			}
 		}

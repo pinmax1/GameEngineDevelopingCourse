@@ -38,6 +38,10 @@ struct FrictionAmount
 	float value;
 };
 
+struct CollisionBox {
+	float size;
+};
+
 using Speed = float;
 
 void RegisterEcsPhysSystems(flecs::world& world);
