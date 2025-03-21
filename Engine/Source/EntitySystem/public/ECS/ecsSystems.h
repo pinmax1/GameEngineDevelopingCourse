@@ -27,6 +27,7 @@ namespace GameEngine
 		{
 			GameEngine::Render::RenderObject* ptr = nullptr;
 		};
+		struct OnRemove {};
 
 		void RegisterEcsCoreSystems(flecs::world& world);
 	}

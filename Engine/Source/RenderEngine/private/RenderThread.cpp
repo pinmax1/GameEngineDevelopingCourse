@@ -69,6 +69,14 @@ namespace GameEngine::Render
 					std::forward<Args>(args)...)
 			);
 			break;
+
+		case ERC::DeleteRenderObject:
+			m_commands[m_CurMainFrame].push_back(
+				new EnqueuedRenderCommand(
+					[this](RenderCore::Geometry::Ptr geometry, RenderObject* renderObject) { m_RenderEngine->DeleteRenderObject(renderObject); },
+					std::forward<Args>(args)...)
+			);
+			break;
 		default:
 			assert(0);
 			break;
@@ -82,6 +90,7 @@ namespace GameEngine::Render
 			m_commands[m_CurMainFrame].pop_back();
 		}
 	}
+
 
 	void RenderThread::ProcessCommands()
 	{

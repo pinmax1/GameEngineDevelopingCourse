@@ -23,5 +23,9 @@ struct CameraPtr
 	GameEngine::Core::Camera* ptr;
 };
 
+struct WasPressedLbm {
+	bool flag;
+};
+
 void RegisterEcsControlSystems(flecs::world& world);
 

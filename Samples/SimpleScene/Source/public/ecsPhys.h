@@ -58,3 +58,22 @@ ECS_STRUCT(Speed,
 	float value;
 });
 
+ECS_STRUCT(Timer,
+{
+	float leftTime;
+});
+
+ECS_STRUCT(IsDead,
+	{
+		bool flag;
+	});
+
+ECS_STRUCT(Health,
+{
+	float hp;
+});
+ECS_STRUCT(Size,
+{
+	float size;
+});
+

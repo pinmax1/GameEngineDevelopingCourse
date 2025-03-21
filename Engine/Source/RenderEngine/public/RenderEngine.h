@@ -22,6 +22,8 @@ namespace GameEngine::Render
 
 		void CreateRenderObject(RenderCore::Geometry::Ptr geometry, RenderObject* renderObject);
 
+		void DeleteRenderObject(RenderObject* renderObject);
+
 	private:
 		uint32_t m_swapChainWidth;
 		uint32_t m_swapChainHeight;

@@ -60,9 +60,39 @@ local function BounceSystem(it)
     end
 end
 
+local function TimerSystem(it)
+	for timer, isDead in ecs.each(it) do
+		timer.leftTime = timer.leftTime - it.delta_time
+		if timer.leftTime < 0 then
+			isDead.flag = true
+		end
+	end
+end
+
+local function CheckCollision(it)
+	for firstSize, firstPos, firstHealth, firstEnt in ecs.each(it) do
+		for secondSize, secondPos, secondHealth, secondEnt in ecs.each(it) do
+			if (firstEnt > secondEnt and math.abs(firstPos.x - secondPos.x) < firstSize.size + secondSize.size and math.abs(firstPos.y - secondPos.y) < firstSize.size + secondSize.size and math.abs(firstPos.z - secondPos.z) < firstSize.size + secondSize.size) then
+				firstHealth.hp = firstHealth.hp - 1
+				secondHealth.hp = secondHealth.hp - 1
+			end
+		end
+	end
+end
+
+local function CheckHealth(it)
+	for health, isDead in ecs.each(it) do
+		if health.hp < 1 then 
+			isDead.flag = true
+		end
+	end
+end
+
 ecs.system(move, "Move", ecs.OnUpdate, "Position, Velocity")
 ecs.system(gravity, "grav", ecs.OnUpdate, "Position, Velocity, Gravity, BouncePlane")
 ecs.system(FrictionSystem, "FrictionSystem", ecs.OnUpdate, "Velocity, FrictionAmount")
 ecs.system(ShiverSystem, "ShiverSystem", ecs.OnUpdate, "Position, ShiverAmount")
 ecs.system(BounceSystem, "BounceSystem", ecs.OnUpdate, "Position, Velocity, BouncePlane, Bounciness")
-
+ecs.system(TimerSystem, "TimerSystem", ecs.OnUpdate, "Timer, IsDead")
+ecs.system(CheckCollision, "CheckCollision", ecs.OnUpdate, "Size, Position, Health")
+ecs.system(CheckHealth, "CheckHealth", ecs.OnUpdate, "Health, IsDead")

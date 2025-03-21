@@ -5,7 +5,7 @@
 #include <Geometry.h>
 #include <RenderThread.h>
 #include <RenderObject.h>
-
+#include <DefaultGeometry.h>
 using namespace GameEngine;
 
 void RegisterEcsMeshSystems(flecs::world& world)
@@ -13,9 +13,18 @@ void RegisterEcsMeshSystems(flecs::world& world)
 	static const EntitySystem::ECS::RenderThreadPtr* renderThread = world.get<EntitySystem::ECS::RenderThreadPtr>();
 
 	world.system<EntitySystem::ECS::RenderObjectPtr, const Position>()
-		.each([&](EntitySystem::ECS::RenderObjectPtr& renderObject, const Position& position)
+		.each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, const Position& position)
 	{
 		renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
+	});
+
+	world.system<EntitySystem::ECS::RenderObjectPtr, IsDead>()
+		.each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, IsDead& isDead)
+	{
+		if (isDead.flag) {
+			renderThread->ptr->EnqueueCommand<RenderCore::Geometry::Ptr, Render::RenderObject*>(Render::ERC::CreateRenderObject, RenderCore::DefaultGeometry::Cube(), renderObject.ptr);
+			e.destruct();
+		}
 	});
 }
 
