@@ -71,6 +71,12 @@ void GameFramework::RegisterComponentsReflection()
 
 	m_World.component<JumpSpeed>()
 		.member<float>("value");
+	
+	m_World.component<Size>()
+		.member<float>("value");
+
+	m_World.component<Timer>()
+		.member<float>("leftTime");
 }
 
 void GameFramework::RegisterSystems()

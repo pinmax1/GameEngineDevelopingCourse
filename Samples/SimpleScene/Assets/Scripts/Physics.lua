@@ -60,9 +60,47 @@ local function BounceSystem(it)
     end
 end
 
+
+local function TimerSystem(it)
+	for timer in ecs.each(it) do
+		timer.leftTime = timer.leftTime - it.delta_time
+	end
+end
+
+local function CollisionSystem(it)
+	for firstSize, firstPos, firstVel, firstEnt in ecs.each(it) do
+		for secondSize, secondPos, secondVel, secondEnt in ecs.each(it) do
+			if (firstEnt > secondEnt and math.abs(firstPos.x - secondPos.x) < firstSize.value + secondSize.value and math.abs(firstPos.y - secondPos.y) < firstSize.value + secondSize.value and math.abs(firstPos.z - secondPos.z) < firstSize.value + secondSize.value) then
+
+				local xDist = firstSize.value + secondSize.value - math.abs(firstPos.x - secondPos.x)
+				local yDist = firstSize.value + secondSize.value - math.abs(firstPos.y - secondPos.y)
+				local zDist = firstSize.value + secondSize.value - math.abs(firstPos.z - secondPos.z)
+
+				if xDist < yDist and xDist < zDist then
+					local direction = (firstPos.x < secondPos.x) and -1 or 1
+					firstPos.x = firstPos.x + direction * xDist / 2
+					secondPos.x = secondPos.x - direction * xDist / 2
+					firstVel.x, secondVel.x = secondVel.x, firstVel.x
+				elseif yDist < zDist then
+					local direction = (firstPos.y < secondPos.y) and -1 or 1
+					firstPos.y = firstPos.y + direction * yDist / 2
+					secondPos.y = secondPos.y - direction * yDist / 2
+					firstVel.y, secondVel.y = secondVel.y, firstVel.y
+				else
+					local direction = (firstPos.z < secondPos.z) and -1 or 1
+					firstPos.z = firstPos.z + direction * zDist / 2
+					secondPos.z = secondPos.z - direction * zDist / 2
+					firstVel.z, secondVel.z = secondVel.z, firstVel.z
+				end
+			end
+		end
+	end
+end
+
 ecs.system(move, "Move", ecs.OnUpdate, "Position, Velocity")
 ecs.system(gravity, "grav", ecs.OnUpdate, "Position, Velocity, Gravity, BouncePlane")
 ecs.system(FrictionSystem, "FrictionSystem", ecs.OnUpdate, "Velocity, FrictionAmount")
 ecs.system(ShiverSystem, "ShiverSystem", ecs.OnUpdate, "Position, ShiverAmount")
 ecs.system(BounceSystem, "BounceSystem", ecs.OnUpdate, "Position, Velocity, BouncePlane, Bounciness")
-
+ecs.system(TimerSystem, "TimerSystem", ecs.OnUpdate, "Timer")
+ecs.system(CollisionSystem, "CollisionSystem", ecs.OnUpdate, "Size, Position, Velocity")

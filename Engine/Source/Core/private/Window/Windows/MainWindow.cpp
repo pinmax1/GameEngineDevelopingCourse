@@ -35,33 +35,43 @@ namespace GameEngine::Core
 			return 0;
 		case WM_MOUSEMOVE:
 			if (!g_MainWindowsApplication->IsFocused()) [[unlikely]]
-			{
-				return 0;
-			}
+				{
+					return 0;
+				}
 
-			POINT pt;
-			pt.x = GET_X_LPARAM(lParam);
-			pt.y = GET_Y_LPARAM(lParam);
-			ClientToScreen(GetPlatformWindowHandle(g_MainWindowsApplication->GetWindowHandle()), &pt);
-			Math::Vector2i pos = g_MainWindowsApplication->GetMousePos();
-			InputHandler::GetInstance()->OnMouseMove(pt.x - pos.x, pt.y - pos.y);
-			return 0;
+				POINT pt;
+				pt.x = GET_X_LPARAM(lParam);
+				pt.y = GET_Y_LPARAM(lParam);
+				ClientToScreen(GetPlatformWindowHandle(g_MainWindowsApplication->GetWindowHandle()), &pt);
+				Math::Vector2i pos = g_MainWindowsApplication->GetMousePos();
+				InputHandler::GetInstance()->OnMouseMove(pt.x - pos.x, pt.y - pos.y);
+				return 0;
 		case WM_LBUTTONDOWN:
 		case WM_RBUTTONDOWN:
 		case WM_MBUTTONDOWN:
 			if (g_MainWindowsApplication->IsFocused()) [[likely]]
-			{
-				InputHandler::GetInstance()->KeyPressed(MKToMouseButton(wParam));
-			}
-			return 0;
+				{
+					InputHandler::GetInstance()->KeyPressed(MKToMouseButton(wParam));
+				}
+				return 0;
 		case WM_LBUTTONUP:
 		case WM_RBUTTONUP:
 		case WM_MBUTTONUP:
 			if (g_MainWindowsApplication->IsFocused()) [[likely]]
-			{
-				InputHandler::GetInstance()->KeyReleased(MKToMouseButton(wParam));
-			}
-			return 0;
+				{
+					// This is the only way to determine which button is pressed
+					// wParam only contains buttons that are down
+					// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup
+
+					WPARAM button = wParam;
+					if (msg == WM_LBUTTONUP) { button = MK_LBUTTON; }
+					if (msg == WM_RBUTTONUP) { button = MK_RBUTTON; }
+					if (msg == WM_MBUTTONUP) { button = MK_MBUTTON; }
+
+					InputHandler::GetInstance()->KeyReleased(MKToMouseButton(button));
+				}
+				return 0;
+
 		case WM_SETFOCUS:
 			g_MainWindowsApplication->Focus();
 			return 0;
