@@ -9,6 +9,7 @@ namespace GameEngine::World
 
 	void Level::AddLevelObject(const LevelObject& levelObject)
 	{
+		levelObject.SetLevelObjectId(m_LevelObjectList.size());
 		m_LevelObjectList.push_back(levelObject);
 	}
 }

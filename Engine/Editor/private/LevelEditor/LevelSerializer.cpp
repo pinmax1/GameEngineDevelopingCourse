@@ -27,9 +27,9 @@ namespace GameEngine::Editor
 
 			entityElem->SetAttribute("Name", levelObject.GetName().c_str());
 
-			for (const World::LevelObject::Component& component : levelObject.GetComponents())
+			for (const auto& component : levelObject.GetComponents())
 			{
-				entityElem->SetAttribute(component.first.c_str(), component.second.c_str());
+				entityElem->SetAttribute(component.second.name.c_str(), component.second.desc.c_str());
 			}
 		}
 

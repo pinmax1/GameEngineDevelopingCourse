@@ -20,6 +20,7 @@ namespace GameEngine::World
 		void AddLevelObject(const LevelObject& levelObject);
 		const LevelObjectList& GetLevelObjects() const { return m_LevelObjectList; }
 		LevelObjectList& GetLevelObjects() { return m_LevelObjectList; }
+		LevelObject& GetObjectById(size_t id) { return m_LevelObjectList[id]; }
 
 		const std::string& GetName() const { return m_Name; }
 

@@ -41,15 +41,15 @@ namespace GameEngine::World
 		{
 			flecs::entity newEntity = m_World.entity(levelObject.GetName().c_str());
 
-			for (const LevelObject::Component& objComponent : levelObject.GetComponents())
+			for (const auto& objComponent : levelObject.GetComponents())
 			{
-				flecs::entity comp = m_World.lookup(objComponent.first.c_str());
+				flecs::entity comp = m_World.lookup(objComponent.second.name.c_str());
 				assert(comp.is_valid());
 
 				newEntity.add(comp);
 				assert(newEntity.has(comp.id()));
 
-				const char* compValue = objComponent.second.c_str();
+				const char* compValue = objComponent.second.desc.c_str();
 
 				void* ptr = newEntity.get_mut(comp);
 				flecs::cursor cursor = m_World.cursor(comp.id(), ptr);
@@ -69,7 +69,7 @@ namespace GameEngine::World
 
 				if (bIsCustom)
 				{
-					cursor.set_uint(WorldParser::ParseCustom(objComponent.first, objComponent.second));
+					cursor.set_uint(WorldParser::ParseCustom(objComponent.second.name, objComponent.second.desc));
 				}
 
 				ret = cursor.pop();
