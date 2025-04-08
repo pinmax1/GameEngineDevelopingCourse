@@ -16,7 +16,7 @@ namespace GameEngine
 		LevelEditor::LevelEditor(flecs::world& world)
 		{
 			m_Level = LevelSerializer::Deserialize(Core::g_FileSystem->GetFilePath("Levels/Main.xml").generic_string());
-			auto levelObjects = m_Level->GetLevelObjects();
+			World::Level::LevelObjectList levelObjects = m_Level->GetLevelObjects();
 			for (int i = 0; i < levelObjects.size(); ++i)
 			{
 				World::LevelObject levelObject = levelObjects[i];
@@ -26,14 +26,14 @@ namespace GameEngine
 				World::LevelObject::ComponentList& componentList = levelObject.GetComponents();
 
 				World::LevelObject::ComponentList::iterator positionAttribute = std::ranges::find_if(componentList,
-					[](auto& component)
+					[](std::pair<const size_t, World::LevelObject::Component>& component)
 					{
 						return !std::strcmp(component.second.name.c_str(), "Position");
 					}
 				);
 
 				World::LevelObject::ComponentList::iterator geometryAttribute = std::ranges::find_if(componentList,
-					[](auto& component)
+					[](std::pair<const size_t, World::LevelObject::Component>& component)
 					{
 						return !std::strcmp(component.second.name.c_str(), "GeometryPtr");
 					}
@@ -70,7 +70,7 @@ namespace GameEngine
 				{
 					if (ImGui::TreeNode(levelObject.GetName().c_str()))
 					{
-						for (auto& component : levelObject.GetComponents())
+						for (std::pair<const size_t, World::LevelObject::Component>& component : levelObject.GetComponents())
 						{
 							if (component.second.name == "Position") {
 								std::string token;
@@ -123,14 +123,14 @@ namespace GameEngine
 				World::LevelObject::ComponentList& componentList = newLevelObject.GetComponents();
 
 				World::LevelObject::ComponentList::iterator positionAttribute = std::ranges::find_if(componentList,
-					[](auto& component)
+					[](std::pair<const size_t, World::LevelObject::Component>& component)
 					{
 						return !std::strcmp(component.second.name.c_str(), "Position");
 					}
 				);
 
 				World::LevelObject::ComponentList::iterator geometryAttribute = std::ranges::find_if(componentList,
-					[](auto& component)
+					[](std::pair<const size_t, World::LevelObject::Component>& component)
 					{
 						return !std::strcmp(component.second.name.c_str(), "GeometryPtr");
 					}

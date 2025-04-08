@@ -41,7 +41,7 @@ namespace GameEngine::World
 		{
 			flecs::entity newEntity = m_World.entity(levelObject.GetName().c_str());
 
-			for (const auto& objComponent : levelObject.GetComponents())
+			for (const std::pair<const size_t, World::LevelObject::Component>& objComponent : levelObject.GetComponents())
 			{
 				flecs::entity comp = m_World.lookup(objComponent.second.name.c_str());
 				assert(comp.is_valid());
